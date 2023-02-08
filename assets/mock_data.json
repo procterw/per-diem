@@ -1,0 +1,48 @@
+{
+    "dates": [
+        { "date": "2023-01-19", "activities": [] },
+        { "date": "2023-01-20", "activities": [] },
+        { "date": "2023-01-21", "activities": [
+            { "type": "Gym", "content": "foo bar baz" },
+            { "type": "Running", "content": "foo bar baz" },
+            { "type": "Ballet", "content": "foo bar baz" }
+        ] },
+        { "date": "2023-01-22", "activities": [
+            { "type": "Cycling", "content": "foo bar baz" }
+        ] },
+        { "date": "2023-01-23", "activities": [
+            { "type": "Gym", "content": "foo bar baz" },
+            { "type": "Running", "content": "foo bar baz" }
+        ] },
+        { "date": "2023-01-24", "activities": [] },
+        { "date": "2023-01-25", "activities": [] },
+        { "date": "2023-01-26", "activities": [
+            { "type": "Ballet", "content": "foo bar baz. This activity is way longer than any of the other ones, will it run over?" }
+        ] },
+        { "date": "2023-01-27", "activities": [] },
+        { "date": "2023-01-28", "activities": [] },
+        { "date": "2023-01-29", "activities": [
+            { "type": "Gym", "content": "foo bar baz" },
+            { "type": "Cycling", "content": "foo bar baz" }
+        ] },
+        { "date": "2023-01-30", "activities": [] },
+        { "date": "2023-01-31", "activities": [
+            { "type": "Running", "content": "foo bar baz" }
+        ] },
+        { "date": "2023-02-01", "activities": [] },
+        { "date": "2023-02-02", "activities": [
+            { "type": "Running", "content": "foo bar baz" },
+            { "type": "Ballet", "content": "foo bar baz" }
+        ] },
+        { "date": "2023-02-03", "activities": [] },
+        { "date": "2023-02-04", "activities": [] },
+        { "date": "2023-02-05", "activities": [] }   
+    ],
+    "activityDef": [
+        { "type": "Gym", "color": "blue", "icon": "🏋️" },
+        { "type": "Flexibility", "color": "blue", "icon": "🧘" },
+        { "type": "Running", "color": "blue", "icon": "🏃" },
+        { "type": "Ballet", "color": "blue", "icon": "🩰" },
+        { "type": "Cycling", "color": "blue", "icon": "🚴" }
+    ]
+}
