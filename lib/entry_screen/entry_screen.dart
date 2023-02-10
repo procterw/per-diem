@@ -24,13 +24,14 @@ class EntryScreen extends ConsumerWidget {
                 if (entrySnapshot.hasData && activitySnapshot.hasData) {
                   final entry = entrySnapshot.data.docs[0].data();
 
-                  final test = activitySnapshot.data!.docs.map((document) {
+                  final activityOptionDocs =
+                      activitySnapshot.data!.docs.map((document) {
                     ActivityOption data = document.data()! as ActivityOption;
                     return data;
                   }).toList();
 
                   List<ActivityOption> activityOptions =
-                      List<ActivityOption>.from(test);
+                      List<ActivityOption>.from(activityOptionDocs);
 
                   return Scaffold(
                     appBar: AppBar(title: EntryHeader(entry: entry)),

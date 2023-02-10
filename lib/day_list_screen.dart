@@ -1,18 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dailylog/dates.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'classes.dart';
 import 'date_row.dart';
 import 'mock_api.dart';
 
-// List<DateTime> getDateList() {
-//   final List<DateTime> dateList = [];
-//   final d = DateTime.now();
-//   for (var i = 25; i >= -10; i--) {
-//     dateList.add(d.subtract(Duration(days: i)));
-//   }
-//   return dateList;
-// }
+class DateList extends StateNotifier<List<DateTime>> {
+  DateList() : super([]) {
+    generateDateList();
+  }
+
+  final DateTime anchorDate = DateTime.now();
+
+  void generateDateList() {
+    final List<DateTime> dateList = [];
+    final d = anchorDate;
+    for (var i = 25; i >= -10; i--) {
+      dateList.add(d.subtract(Duration(days: i)));
+    }
+    state = dateList;
+  }
+
+  // when scrolling up, an earlier set of dates needs to be loaded
+  void shiftEarlier() {}
+
+  // when scrolling up, an later set of dates needs to be loaded
+  void shiftLater() {}
+}
+
+final dateListProvider = StateNotifierProvider<DateList, List<DateTime>>((ref) {
+  return DateList();
+});
 
 class DayListScreen extends ConsumerWidget {
   const DayListScreen({super.key});
@@ -40,10 +59,7 @@ class DayListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final db = ref.watch(databaseProvider);
-
-    // final dateList = getDateList();
-
-    // db.clear();
+    final dateList = ref.watch(dateListProvider);
 
     return Scaffold(
         appBar: AppBar(
@@ -63,15 +79,36 @@ class DayListScreen extends ConsumerWidget {
                         'Some error occurred')); // Show an error just in case(no internet etc)
               }
 
-              final List<QueryDocumentSnapshot> entries = snapshot.data.docs;
+              final entryDocs = snapshot.data!.docs.map((document) {
+                Entry data = document.data()! as Entry;
+                return data;
+              }).toList();
+
+              List<Entry> entries = List<Entry>.from(entryDocs);
 
               return ListView.builder(
-                itemCount: entries.length,
+                itemCount: dateList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final entry = entries[index].data() as Entry;
-                  return DateRow(entry: entry);
+                  final DateTime dateTime = dateList[index];
+                  final int date = getDateId(dateTime);
+
+                  try {
+                    final entry =
+                        entries.firstWhere((Entry e) => e.date == date);
+                    return DateRow(entry: entry);
+                  } catch (e) {
+                    return EmptyDateRow(date: date);
+                  }
                 },
               );
+
+              // return ListView.builder(
+              //   itemCount: entries.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     final entry = entries[index].data() as Entry;
+              //     return DateRow(entry: entry);
+              //   },
+              // );
 
               // return ListView.builder(
               //   itemCount: entries.length,

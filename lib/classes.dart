@@ -84,6 +84,18 @@ class Entry {
         id: id, date: date, dateString: dateString, activities: activities);
   }
 
+  factory Entry.empty(date) {
+    final d = date.toString();
+    final dateString =
+        '${d.substring(0, 4)}-${d.substring(4, 6)}-${d.substring(6, 8)}';
+    return Entry(
+      id: dateString,
+      date: date,
+      dateString: dateString,
+      activities: [],
+    );
+  }
+
   toJson() {
     return {
       'date': date,

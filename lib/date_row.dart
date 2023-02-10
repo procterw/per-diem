@@ -3,8 +3,8 @@ import 'dates.dart';
 import 'classes.dart';
 import 'entry_screen/entry_screen.dart';
 
-class DateHeader extends StatelessWidget {
-  const DateHeader({super.key, required this.date});
+class _DateHeader extends StatelessWidget {
+  const _DateHeader({super.key, required this.date});
 
   final String date;
 
@@ -63,6 +63,32 @@ class DateRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _DateRowContent(entry: entry);
+  }
+}
+
+class EmptyDateRow extends StatelessWidget {
+  const EmptyDateRow({super.key, required this.date});
+
+  final int date;
+
+  @override
+  Widget build(BuildContext context) {
+    final Entry entry = Entry.empty(date);
+    return _DateRowContent(entry: entry);
+  }
+}
+
+class _DateRowContent extends StatelessWidget {
+  const _DateRowContent({
+    super.key,
+    required this.entry,
+  });
+
+  final Entry entry;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
@@ -76,7 +102,7 @@ class DateRow extends StatelessWidget {
         },
         child: Column(
           children: [
-            DateHeader(date: entry.dateString),
+            _DateHeader(date: entry.dateString),
             Column(
                 children: entry.activities
                     .map((a) => ActivityPreview(activity: a))
