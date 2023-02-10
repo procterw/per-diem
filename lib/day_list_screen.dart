@@ -5,6 +5,15 @@ import 'classes.dart';
 import 'date_row.dart';
 import 'mock_api.dart';
 
+// List<DateTime> getDateList() {
+//   final List<DateTime> dateList = [];
+//   final d = DateTime.now();
+//   for (var i = 25; i >= -10; i--) {
+//     dateList.add(d.subtract(Duration(days: i)));
+//   }
+//   return dateList;
+// }
+
 class DayListScreen extends ConsumerWidget {
   const DayListScreen({super.key});
 
@@ -32,22 +41,24 @@ class DayListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final db = ref.watch(databaseProvider);
 
+    // final dateList = getDateList();
+
     // db.clear();
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Calendar'),
+          title: const Text('Calendar'),
         ),
         body: StreamBuilder(
             stream: db.allEntries,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return Center(
+                return const Center(
                     child:
                         CircularProgressIndicator()); // Show a CircularProgressIndicator when the stream is loading
               }
               if (snapshot.error != null) {
-                return Center(
+                return const Center(
                     child: Text(
                         'Some error occurred')); // Show an error just in case(no internet etc)
               }
@@ -61,6 +72,14 @@ class DayListScreen extends ConsumerWidget {
                   return DateRow(entry: entry);
                 },
               );
+
+              // return ListView.builder(
+              //   itemCount: entries.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     final entry = entries[index].data() as Entry;
+              //     return DateRow(entry: entry);
+              //   },
+              // );
             }));
 
     // ,ListView(

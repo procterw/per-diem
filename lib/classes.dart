@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +12,17 @@ class Activity {
   factory Activity.fromJson(Map<String, dynamic> data) {
     final type = data['type'] as String;
     final note = data['note'] as String;
+    return Activity(type: type, note: note);
+  }
+
+  toJson() {
+    return {
+      'type': type,
+      'note': note,
+    };
+  }
+
+  Activity updateNote(note) {
     return Activity(type: type, note: note);
   }
 }
@@ -29,14 +41,38 @@ class ActivityDef {
   }
 }
 
+class ActivityOption {
+  ActivityOption({required this.type, required this.icon});
+  final String type;
+  final String icon;
+
+  factory ActivityOption.fromJson(Map<dynamic, dynamic> data) {
+    final type = data['type'] as String;
+    final icon = data['icon'] as String;
+    return ActivityOption(type: type, icon: icon);
+  }
+
+  toJson() {
+    return {
+      'type': type,
+      'icon': icon,
+    };
+  }
+}
+
 class Entry {
   Entry(
-      {required this.date, required this.dateString, required this.activities});
+      {required this.id,
+      required this.date,
+      required this.dateString,
+      required this.activities});
+  final String id;
   final int date;
   final String dateString;
   final List<Activity> activities;
 
   factory Entry.fromJson(Map<String, dynamic> data) {
+    final id = data['id'] as String;
     final date = data['date'] as int;
     final d = date.toString();
     final dateString =
@@ -44,35 +80,95 @@ class Entry {
     final activities = data['activities'].map<Activity>((d) {
       return Activity.fromJson(d);
     }).toList();
-    final x = Entry(date: date, dateString: dateString, activities: activities);
-    return Entry(date: date, dateString: dateString, activities: activities);
+    return Entry(
+        id: id, date: date, dateString: dateString, activities: activities);
+  }
+
+  toJson() {
+    return {
+      'date': date,
+      'activities': activities.map((a) => a.toJson()).toList(),
+    };
+  }
+
+  addActivity(String type) {
+    return updateActivities([...activities, Activity(type: type, note: '')]);
+  }
+
+  setActivity(String type, String note) {
+    final i = activities.indexWhere((a) => a.type == type);
+    final updatedActivity = activities[i].updateNote(note);
+    final activitiesCopy = [...activities];
+    activitiesCopy[i] = updatedActivity;
+    return updateActivities(activitiesCopy);
+  }
+
+  removeActivity(type) {
+    final i = activities.indexWhere((a) => a.type == type);
+    final activitiesCopy = [...activities];
+    activitiesCopy.removeAt(i);
+    return updateActivities(activities);
+  }
+
+  updateActivities(activities) {
+    // final index = activities.indexWhere((a) => a.type == activity.type);
+    // final nextActivities = [...activities];
+    // nextActivities[index] = activity;
+    return Entry(
+      id: id,
+      date: date,
+      dateString: dateString,
+      activities: activities,
+    );
   }
 }
 
 class Database {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final CollectionReference<Entry> _entryRef =
+      FirebaseFirestore.instance.collection('entries').withConverter<Entry>(
+            fromFirestore: (snapshot, _) {
+              return Entry.fromJson({...snapshot.data()!, 'id': snapshot.id});
+            },
+            toFirestore: (entry, _) => entry.toJson(),
+          );
 
+  final CollectionReference<ActivityOption> _activityOptionRef =
+      FirebaseFirestore.instance
+          .collection('activityOptions')
+          .withConverter<ActivityOption>(
+            fromFirestore: (snapshot, _) {
+              return ActivityOption.fromJson(
+                  {...snapshot.data()!, 'id': snapshot.id});
+            },
+            toFirestore: (activityOption, _) => activityOption.toJson(),
+          );
+
+  // FOR LOCAL DEV
   void clear() async {
-    await _firestore.terminate();
-    await _firestore.clearPersistence();
+    await FirebaseFirestore.instance.terminate();
+    await FirebaseFirestore.instance.clearPersistence();
   }
 
-  Stream get allEntries => _firestore
-      .collection('entries')
-      .withConverter<Entry>(
-        fromFirestore: (snapshots, _) {
-          print('bad:');
-          print(snapshots.data());
-          return Entry.fromJson(snapshots.data()!);
-        },
-        toFirestore: (entry, _) => {'foo': 'bar'},
-      )
-      .snapshots();
+  Stream get allEntries => _entryRef.snapshots();
 
-  // Future<bool> editEntry(Entry e) {
-  //   entries = _firestore.collection('entries');
-  //   try {
-  //     await _movies.doc()
-  //   }
-  // };
+  Stream entry(date) => _entryRef.where('date', isEqualTo: date).snapshots();
+
+  Stream get activityOptions => _activityOptionRef.snapshots();
+
+  Future<bool> editEntry(Entry entry) async {
+    try {
+      await _entryRef.doc(entry.id).update(entry.toJson());
+      return true;
+    } catch (e) {
+      print(e);
+      return Future.error(e); //return error
+    }
+  }
 }
+
+// Future<bool> editEntry(Entry e) {
+//   entries = _firestore.collection('entries');
+//   try {
+//     await _movies.doc()
+//   }
+// };

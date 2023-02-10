@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dates.dart';
 import 'classes.dart';
-import 'entry_screen.dart';
+import 'entry_screen/entry_screen.dart';
 
 class DateHeader extends StatelessWidget {
   const DateHeader({super.key, required this.date});
@@ -70,7 +70,7 @@ class DateRow extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
-              return EntryScreen(entry: entry);
+              return EntryScreen(date: entry.date);
             }),
           );
         },
