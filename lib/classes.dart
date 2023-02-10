@@ -163,6 +163,11 @@ class Database {
 
   Stream get allEntries => _entryRef.snapshots();
 
+  Stream entries(startDate, endDate) => _entryRef
+      .where('date', isGreaterThanOrEqualTo: startDate)
+      .where('date', isLessThanOrEqualTo: endDate)
+      .snapshots();
+
   Stream entry(date) => _entryRef.where('date', isEqualTo: date).snapshots();
 
   Stream get activityOptions => _activityOptionRef.snapshots();
