@@ -22,7 +22,12 @@ class EntryScreen extends ConsumerWidget {
               stream: db.activityOptions,
               builder: (activityContext, activitySnapshot) {
                 if (entrySnapshot.hasData && activitySnapshot.hasData) {
-                  final entry = entrySnapshot.data.docs[0].data();
+                  Entry entry;
+                  try {
+                    entry = entrySnapshot.data.docs[0].data();
+                  } catch (_) {
+                    entry = Entry.empty(date);
+                  }
 
                   final activityOptionDocs =
                       activitySnapshot.data!.docs.map((document) {
@@ -41,7 +46,6 @@ class EntryScreen extends ConsumerWidget {
                       children: [
                         ...entry.activities
                             .map((a) => ActivityEditor(
-                                  activityOptions: activityOptions,
                                   activity: a,
                                   onChanged: (type, note) {
                                     db.editEntry(entry.setActivity(type, note));

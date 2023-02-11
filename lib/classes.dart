@@ -27,35 +27,24 @@ class Activity {
   }
 }
 
-class ActivityDef {
-  ActivityDef({required this.type, required this.icon, required this.color});
+class ActivityOption {
+  ActivityOption({required this.type, required this.icon, required this.color});
   final String type;
   final String icon;
   final String color;
 
-  factory ActivityDef.fromJson(Map<dynamic, dynamic> data) {
-    final type = data['type'] as String;
-    final icon = data['icon'] as String;
-    final color = data['color'] as String;
-    return ActivityDef(type: type, icon: icon, color: color);
-  }
-}
-
-class ActivityOption {
-  ActivityOption({required this.type, required this.icon});
-  final String type;
-  final String icon;
-
   factory ActivityOption.fromJson(Map<dynamic, dynamic> data) {
     final type = data['type'] as String;
     final icon = data['icon'] as String;
-    return ActivityOption(type: type, icon: icon);
+    final color = data['color'] as String;
+    return ActivityOption(type: type, icon: icon, color: color);
   }
 
   toJson() {
     return {
       'type': type,
       'icon': icon,
+      'color': color,
     };
   }
 }
@@ -89,7 +78,7 @@ class Entry {
     final dateString =
         '${d.substring(0, 4)}-${d.substring(4, 6)}-${d.substring(6, 8)}';
     return Entry(
-      id: dateString,
+      id: 'EMPTY',
       date: date,
       dateString: dateString,
       activities: [],
@@ -174,10 +163,13 @@ class Database {
 
   Future<bool> editEntry(Entry entry) async {
     try {
-      await _entryRef.doc(entry.id).update(entry.toJson());
+      if (entry.id == 'EMPTY') {
+        await _entryRef.add(entry);
+      } else {
+        await _entryRef.doc(entry.id).set(entry);
+      }
       return true;
     } catch (e) {
-      print(e);
       return Future.error(e); //return error
     }
   }

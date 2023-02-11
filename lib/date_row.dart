@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dates.dart';
 import 'classes.dart';
 import 'entry_screen/entry_screen.dart';
+import 'activity_label.dart';
 
 class _DateHeader extends StatelessWidget {
   const _DateHeader({super.key, required this.date});
@@ -11,23 +12,21 @@ class _DateHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        width: 55,
+        padding: const EdgeInsets.symmetric(vertical: 0),
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              Colors.grey.shade200,
-              Colors.grey.shade50,
-            ])),
-        child: Row(children: [
-          const SizedBox(width: 24),
-          Text(getDate(date),
-              style:
-                  const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          const SizedBox(width: 8),
-          Text(getDayOfWeek(date)),
-        ]));
+          border: BorderDirectional(
+              end: BorderSide(color: Colors.blueGrey.shade50)),
+        ),
+        child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(getDayOfWeek(date),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              // const SizedBox(width: 24),
+              Text(getDate(date), style: const TextStyle(fontSize: 12)),
+            ]));
   }
 }
 
@@ -39,31 +38,16 @@ class ActivityPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-            border: Border(
-                left: BorderSide(width: 16, color: Colors.orange.shade500))),
-        child: Row(
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          // mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(width: 8),
-            Text(activity.type,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(width: 4),
-            Flexible(
-                child: Text(activity.note, overflow: TextOverflow.ellipsis)),
+            ActivityLabel(type: activity.type),
+            Text(activity.note),
+            // Flexible(child: Text(activity.note, overflow: TextOverflow.ellipsis)),
           ],
         ));
-  }
-}
-
-class DateRow extends StatelessWidget {
-  const DateRow({super.key, required this.entry});
-
-  final Entry entry;
-
-  @override
-  Widget build(BuildContext context) {
-    return _DateRowContent(entry: entry);
   }
 }
 
@@ -90,7 +74,20 @@ class _DateRowContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        // border: Border.all(color: Colors.blueGrey.shade200),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.blueGrey.shade100.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: Offset(0, 1))
+        ],
+      ),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -100,16 +97,39 @@ class _DateRowContent extends StatelessWidget {
             }),
           );
         },
-        child: Column(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _DateHeader(date: entry.dateString),
             Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: entry.activities
                     .map((a) => ActivityPreview(activity: a))
                     .toList()),
+            // Container(
+            //     height: 16,
+            //     decoration: BoxDecoration(
+            //         gradient: LinearGradient(
+            //             begin: Alignment.topCenter,
+            //             end: Alignment.bottomCenter,
+            //             colors: [
+            //           Colors.grey.shade50,
+            //           Colors.grey.shade300,
+            //         ])))
           ],
         ),
       ),
     );
+  }
+}
+
+class DateRow extends StatelessWidget {
+  const DateRow({super.key, required this.entry});
+
+  final Entry entry;
+
+  @override
+  Widget build(BuildContext context) {
+    return _DateRowContent(entry: entry);
   }
 }

@@ -52,7 +52,6 @@ class DayListScreen extends ConsumerWidget {
         ),
         body: NotificationListener<ScrollNotification>(
             onNotification: (notification) {
-              print('scrolling!');
               final metrics = notification.metrics;
 
               if (metrics.pixels > metrics.maxScrollExtent - 100) {
@@ -75,6 +74,8 @@ class _EntryStream extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final db = ref.watch(databaseProvider);
+
+    // db.clear();
 
     return StreamBuilder(
         stream: db.entries(dateList.last, dateList.first),

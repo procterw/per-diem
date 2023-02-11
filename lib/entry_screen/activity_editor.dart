@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../classes.dart';
+import '../activity_label.dart';
 
 Timer? _debounce;
 
 class ActivityEditor extends StatefulWidget {
   const ActivityEditor(
-      {super.key,
-      required this.activity,
-      required this.activityOptions,
-      required this.onChanged});
+      {super.key, required this.activity, required this.onChanged});
 
   final Activity activity;
-  final List<ActivityOption> activityOptions;
   final Function onChanged;
 
   @override
@@ -37,25 +34,7 @@ class _ActivityEditorState extends State<ActivityEditor> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Container(
-        padding: const EdgeInsets.only(bottom: 8),
-        width: double.infinity,
-        child: RichText(
-            // text: widget.activity.
-            text: TextSpan(
-                text: widget.activityOptions
-                    .firstWhere((a) => a.type == widget.activity.type)
-                    .icon,
-                style: const TextStyle(fontSize: 18),
-                children: [
-              TextSpan(
-                  text: widget.activity.type,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14))
-            ])),
-      ),
+      ActivityLabel(type: widget.activity.type),
       Container(
           margin: const EdgeInsets.only(bottom: 8),
           color: Colors.grey.shade100,

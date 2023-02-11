@@ -1,7 +1,6 @@
 import 'package:dailylog/mock_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'day_list_screen.dart';
 import 'app_state.dart';
 import 'logged_out_view.dart';
 
@@ -42,7 +41,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final database = context.read(databaseProvider);
-    return MaterialApp(home: LoggedOutView(state: state));
+    return MaterialApp(
+        theme: ThemeData(
+            primarySwatch: Colors.blue,
+            colorScheme: ColorScheme.light(background: Colors.grey.shade300)),
+        home: LoggedOutView(state: state));
 
     // if (state.user == null) {
     //   return MaterialApp(home: LoggedOutView(state: state));

@@ -7,7 +7,7 @@ getDate(String dateString) {
 
 getDayOfWeek(String dateString) {
   final parsedDate = DateTime.parse(dateString);
-  return DateFormat.EEEE().format(parsedDate);
+  return DateFormat.E().format(parsedDate);
 }
 
 String getDateString(DateTime dateTime) {
