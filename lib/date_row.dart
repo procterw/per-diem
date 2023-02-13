@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_listview/infinite_listview.dart';
 import 'dates.dart';
 import 'classes.dart';
 import 'entry_screen/entry_screen.dart';
@@ -11,20 +12,26 @@ class _DateHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dayOfWeek = getDayOfWeek(date);
+    var bgColor = Colors.grey.shade300;
+    if (dayOfWeek == 'Sat' || dayOfWeek == 'Sun') {
+      bgColor = Colors.grey.shade600;
+    }
+
     return Container(
-        width: 55,
-        padding: const EdgeInsets.symmetric(vertical: 0),
+        width: 70,
+        padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          border: BorderDirectional(
-              end: BorderSide(color: Colors.blueGrey.shade50)),
-        ),
+            color: Colors.grey.shade200,
+            border:
+                BorderDirectional(end: BorderSide(color: bgColor, width: 4))),
         child: Column(
             // crossAxisAlignment: CrossAxisAlignment.start,
             // mainAxisAlignment: MainAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(getDayOfWeek(date),
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              // const SizedBox(width: 24),
+              Text(dayOfWeek,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Text(getDate(date), style: const TextStyle(fontSize: 12)),
             ]));
   }
@@ -38,16 +45,32 @@ class ActivityPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 6),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            ActivityLabel(type: activity.type),
-            Text(activity.note),
-            // Flexible(child: Text(activity.note, overflow: TextOverflow.ellipsis)),
-          ],
-        ));
+        padding: EdgeInsets.symmetric(vertical: 4),
+        // color: Colors.grey.shade100,
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          ActivityIcon(type: activity.type),
+          const SizedBox(width: 8, height: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(activity.type,
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                activity.notePreview,
+                maxLines: 1,
+                style: TextStyle(overflow: TextOverflow.fade),
+              ),
+              // Flexible(
+              //     child: Text(
+              //   activity.notePreview,
+              //   maxLines: 1,
+              //   style: TextStyle(overflow: TextOverflow.fade),
+              // )),
+              // Flexible(child: Text(activity.note, overflow: TextOverflow.ellipsis)),
+            ],
+          )
+        ]));
   }
 }
 
@@ -73,51 +96,28 @@ class _DateRowContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        // border: Border.all(color: Colors.blueGrey.shade200),
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.blueGrey.shade100.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: Offset(0, 1))
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) {
+            return EntryScreen(date: entry.date);
+          }),
+        );
+      },
+      // child: IntrinsicHeight( child:
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _DateHeader(date: entry.dateString),
+          Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: entry.activities
+                      .map((a) => ActivityPreview(activity: a))
+                      .toList())),
         ],
-      ),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) {
-              return EntryScreen(date: entry.date);
-            }),
-          );
-        },
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _DateHeader(date: entry.dateString),
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: entry.activities
-                    .map((a) => ActivityPreview(activity: a))
-                    .toList()),
-            // Container(
-            //     height: 16,
-            //     decoration: BoxDecoration(
-            //         gradient: LinearGradient(
-            //             begin: Alignment.topCenter,
-            //             end: Alignment.bottomCenter,
-            //             colors: [
-            //           Colors.grey.shade50,
-            //           Colors.grey.shade300,
-            //         ])))
-          ],
-        ),
       ),
     );
   }

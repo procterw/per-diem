@@ -7,6 +7,37 @@ import 'classes.dart';
 
 // };
 
+class ActivityIcon extends ConsumerWidget {
+  const ActivityIcon({super.key, required this.type});
+
+  final String type;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final db = ref.watch(databaseProvider);
+
+    return StreamBuilder(
+      stream: db.activityOptions,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final activityOptionDocs = snapshot.data!.docs.map((document) {
+            ActivityOption data = document.data()! as ActivityOption;
+            return data;
+          }).toList();
+
+          List<ActivityOption> activityOptions =
+              List<ActivityOption>.from(activityOptionDocs);
+
+          return Text(activityOptions.firstWhere((a) => a.type == type).icon,
+              style: TextStyle(fontSize: 26));
+        } else {
+          return Text('LOADING');
+        }
+      },
+    );
+  }
+}
+
 class ActivityLabel extends ConsumerWidget {
   const ActivityLabel({super.key, required this.type});
 

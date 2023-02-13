@@ -2,28 +2,44 @@ import 'dart:ffi';
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Activity {
-  Activity({required this.type, required this.note});
+  Activity({required this.type, required this.note, required this.notePreview});
   final String type;
   final String note;
+  final String notePreview;
 
   factory Activity.fromJson(Map<String, dynamic> data) {
     final type = data['type'] as String;
     final note = data['note'] as String;
-    return Activity(type: type, note: note);
+    final notePreview = data['notePreview'] as String;
+    return Activity(type: type, note: note, notePreview: notePreview);
+  }
+
+  getNotePreview() {
+    final noteCopy = note;
+    noteCopy.replaceAll("\n", " ");
+    if (noteCopy.length == 0) {
+      return noteCopy;
+    }
+    return noteCopy.substring(
+      0,
+      min(100, noteCopy.length),
+    );
   }
 
   toJson() {
     return {
       'type': type,
       'note': note,
+      'notePreview': getNotePreview(),
     };
   }
 
   Activity updateNote(note) {
-    return Activity(type: type, note: note);
+    return Activity(type: type, note: note, notePreview: notePreview);
   }
 }
 
@@ -93,7 +109,8 @@ class Entry {
   }
 
   addActivity(String type) {
-    return updateActivities([...activities, Activity(type: type, note: '')]);
+    return updateActivities(
+        [...activities, Activity(type: type, note: '', notePreview: '')]);
   }
 
   setActivity(String type, String note) {

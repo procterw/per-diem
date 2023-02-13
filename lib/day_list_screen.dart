@@ -115,23 +115,23 @@ class _DayList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      // reverse: true,
-      slivers: [
-        SliverList(
-          delegate:
-              SliverChildBuilderDelegate((BuildContext context, int index) {
-            final int date = dateList[index];
+    return ListView.separated(
+        itemCount: dateList.length,
+        itemBuilder: (BuildContext context, int index) {
+          final int date = dateList[index];
 
-            try {
-              final entry = entries.firstWhere((Entry e) => e.date == date);
-              return DateRow(entry: entry);
-            } catch (e) {
-              return EmptyDateRow(date: date);
-            }
-          }, childCount: dateList.length),
-        )
-      ],
-    );
+          try {
+            final entry = entries.firstWhere((Entry e) => e.date == date);
+            return DateRow(entry: entry);
+          } catch (e) {
+            return EmptyDateRow(date: date);
+          }
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return Divider(
+            height: 0,
+            color: Colors.grey.shade50,
+          );
+        });
   }
 }
