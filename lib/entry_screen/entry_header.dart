@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../dates.dart';
-import '../classes.dart';
+import '../models/entry.dart';
 
 class EntryHeader extends StatelessWidget {
   const EntryHeader({super.key, required this.entry});

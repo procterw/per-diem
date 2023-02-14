@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import './activity_editor.dart';
 import './activity_selector.dart';
 import './entry_header.dart';
-import '../classes.dart';
-import '../mock_api.dart';
+import '../models/database.dart';
+import '../models/entry.dart';
+import '../models/activity_option.dart';
 
 class EntryScreen extends ConsumerWidget {
   const EntryScreen({super.key, required this.date});

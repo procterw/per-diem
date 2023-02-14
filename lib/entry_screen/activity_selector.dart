@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../classes.dart';
+import '../models/entry.dart';
+import '../models/activity_option.dart';
+import '../models/activity.dart';
 
 class ActivitySelector extends StatelessWidget {
   const ActivitySelector(

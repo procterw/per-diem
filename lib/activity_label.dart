@@ -1,7 +1,7 @@
-import 'package:dailylog/mock_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'classes.dart';
+import './models/activity_option.dart';
+import './models/database.dart';
 
 // enum COLORS = {
 

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-import '../classes.dart';
+import 'package:flutter/material.dart';
 import '../activity_label.dart';
+import '../models/activity.dart';
 
 Timer? _debounce;
 

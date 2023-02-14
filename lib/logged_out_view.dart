@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_print
 
-import 'package:dailylog/day_list_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import './date_list_screen/date_list_screen.dart';
 
 class LoggedOutView extends StatelessWidget {
   final AppState state;
@@ -31,7 +31,7 @@ class LoggedOutView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {
-                          return const DayListScreen();
+                          return const DateListScreen();
                         }),
                       );
                     }
