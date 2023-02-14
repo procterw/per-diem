@@ -37,7 +37,7 @@ class _ActivityEditorState extends State<ActivityEditor> {
       ActivityLabel(type: widget.activity.type),
       Container(
           margin: const EdgeInsets.only(bottom: 8),
-          color: Colors.grey.shade100,
+          color: Theme.of(context).canvasColor,
           child: TextField(
             controller: contentController,
             maxLines: null,

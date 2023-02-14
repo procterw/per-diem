@@ -27,12 +27,14 @@ class ActivitySelector extends StatelessWidget {
           return OutlinedButton(
             onPressed: () => onAdd(a.type),
             child: RichText(
-                text: TextSpan(text: a.icon, children: [
-              TextSpan(
-                  text: a.type,
-                  style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold))
-            ])),
+                text: TextSpan(
+                    text: a.icon,
+                    // style: TextStyle(fontSize: 18),
+                    children: [
+                  TextSpan(
+                    text: a.type,
+                  )
+                ])),
           );
         }).toList());
   }

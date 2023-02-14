@@ -116,6 +116,7 @@ class _DayList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+        shrinkWrap: true,
         itemCount: dateList.length,
         itemBuilder: (BuildContext context, int index) {
           final int date = dateList[index];
@@ -128,10 +129,7 @@ class _DayList extends StatelessWidget {
           }
         },
         separatorBuilder: (BuildContext context, int index) {
-          return Divider(
-            height: 0,
-            color: Colors.grey.shade50,
-          );
+          return SizedBox(height: 12);
         });
   }
 }

@@ -43,8 +43,19 @@ class MyApp extends StatelessWidget {
     // final database = context.read(databaseProvider);
     return MaterialApp(
         theme: ThemeData(
-            primarySwatch: Colors.blue,
-            colorScheme: ColorScheme.light(background: Colors.grey.shade300)),
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              elevation: 1,
+            ),
+            scaffoldBackgroundColor: Colors.grey.shade100,
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: Color.fromARGB(255, 189, 147, 189))),
+        darkTheme: ThemeData(
+          primarySwatch: Colors.grey,
+          colorScheme: ColorScheme.dark(brightness: Brightness.dark),
+        ),
+        themeMode: ThemeMode.system,
         home: LoggedOutView(state: state));
 
     // if (state.user == null) {
