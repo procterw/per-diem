@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'app_state.dart';
 import './date_list_screen/date_list_screen.dart';
+import './calendar_screen/calendar_screen.dart';
 
 class LoggedOutView extends StatelessWidget {
   final AppState state;
@@ -31,7 +32,8 @@ class LoggedOutView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {
-                          return const DateListScreen();
+                          // return const DateListScreen();
+                          return CalendarScreen();
                         }),
                       );
                     }
